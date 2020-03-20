@@ -113,7 +113,7 @@ def plot_validation_curve(train_scores,valid_scores,param_range,ylim=(0.7,1)):
     valid_argmax = param_range[valid_mean.argmax()]        # 验证集最大分数对应的参数取值
     plt.plot(valid_argmax,valid_max,'x',)                  # 画出最大参数的位置
     plt.text(valid_argmax,valid_max + 0.01,
-             '({},{:.4f})'.format(valid_argmax,valid_max)) # 画出最大参数的坐标值
+             '({:.4f},{:.4f})'.format(valid_argmax,valid_max)) # 画出最大参数的坐标值
 
     plt.legend()
     plt.ylim(ylim)
@@ -132,9 +132,13 @@ class SearchUtils() :
         self.y = y
         
     ## 定义搜索函数 ##
-    def search(self,param,param_range,ylim=(0.7,1),xlabel=None,cv=None):
-        train_scores,valid_scores = validation_curve(self.model,
-                                                     self.X,
+    def search(self,param,param_range,ylim=(0.7,1),xlabel=None,cv=None,X=None,model=None):
+        if len(X) == 0 :
+            X = self.X
+        if model == None :
+           model = self.model 
+        train_scores,valid_scores = validation_curve(model,
+                                                     X,
                                                      self.y,
                                                      param,
                                                      param_range,
