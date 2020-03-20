@@ -132,7 +132,7 @@ class SearchUtils() :
         self.y = y
         
     ## 定义搜索函数 ##
-    def search(self,param,param_range,ylim=(0.7,1),xlabel=None):
+    def search(self,param,param_range,ylim=(0.7,1),xlabel=None,cv=None):
         train_scores,valid_scores = validation_curve(self.model,
                                                      self.X,
                                                      self.y,
@@ -140,10 +140,12 @@ class SearchUtils() :
                                                      param_range,
                                                      verbose=1,
                                                      n_jobs=4,
-                                                     error_score=0)
+                                                     error_score=0,
+                                                     cv=cv)
         if not xlabel:
             xlabel = param_range
-        param_max,score_max = plot_validation_curve(train_scores,valid_scores,xlabel,ylim=ylim)
+        param_max,score_max = plot_validation_curve(train_scores,valid_scores,xlabel,
+                                                    ylim=ylim)
         return (param_max,score_max,train_scores,valid_scores)
 
     ## 定义方格搜索函数 ##
