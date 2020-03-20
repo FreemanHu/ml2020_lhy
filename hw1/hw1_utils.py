@@ -5,8 +5,6 @@
 import pandas as pd
 import numpy as np
 
-test_option_index= []
-
 def load_data():
     filepath_train = 'datas/train.csv' # 训练集的路径
     filepath_test = 'datas/test.csv'   # 测试集的路径
@@ -72,14 +70,15 @@ def load_data():
     X_test_pd  = pd.DataFrame(X_test)
     # y_train_pd = pd.DataFrame(y_train_full)
 
-    return X_train_pd,y_train_full,X_test_pd,test_option_index,test_options
+    SelectTestOptionTransformer.test_option_index = test_option_index
+
+    return X_train_pd,y_train_full,X_test_pd,test_options
 
 ## 定义选择测项的Transformer ##
 from sklearn.base import BaseEstimator,TransformerMixin
 class SelectTestOptionTransformer(BaseEstimator,TransformerMixin):
     
-    def __init__(self,test_option_index,exclude=[],exclude_index=None):
-        self.test_option_index = test_option_index
+    def __init__(self,exclude=[],exclude_index=None):
         self.exclude = exclude
         self.exclude_index = exclude_index
         
@@ -93,7 +92,8 @@ class SelectTestOptionTransformer(BaseEstimator,TransformerMixin):
             exclude = [self.exclude_index]
 
         elif self.exclude:
-            exclude = [self.test_option_index[e] for e in self.exclude] # 获得测项对应的索引值
+            exclude = [SelectTestOptionTransformer.test_option_index[e] 
+                            for e in self.exclude] # 获得测项对应的索引值
         
         X_copy = X.copy()                                   
         
